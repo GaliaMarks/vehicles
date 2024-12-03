@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-data=pd.read_csv('C:/Users/galia/Documents/vehicles sprint 6 project/vehicles/vehicles_us.csv')
+data=pd.read_csv('vehicles_us.csv')
 
 columns_to_replace = ['paint_color', 'is_4wd']
 for column in columns_to_replace:
