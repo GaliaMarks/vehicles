@@ -1,8 +1,41 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 import plotly.express as px
 
 data=pd.read_csv('C:/Users/galia/Documents/vehicles sprint 6 project/vehicles/vehicles_us.csv')
+
+columns_to_replace = ['paint_color', 'is_4wd']
+for column in columns_to_replace:
+    data[column]= data[column].fillna('unknown')
+    print(data[column])
+    
+data['model_year'] = data['model_year'].fillna(data.groupby(['model'])
+['model_year'].transform('median'))
+data['model_year'] = data['model_year'].apply( lambda x: int(x))
+
+data['cylinders'] = pd.to_numeric(data['cylinders'], errors='ignore')
+data['cylinders'] = data['cylinders'].fillna(data.groupby(['model'])
+['cylinders'].transform('mean'))
+
+data['odometer'] = data['odometer'].fillna(data.groupby(['model_year'])['odometer'].transform('median'))
+data['odometer'] = data['odometer'].round()
+
+replacement_dict = {
+    'chevrolet camaro lt coupe 2d': 'chevrolet camaro',
+    'ford f-250 sd': 'ford f-250',
+    'ford f-250 super duty': 'ford f-250',
+    'ford f250': 'ford f-250',
+    'ford f250 super duty': 'ford f-250',
+    'ford f-350 sd': 'ford f-350',
+    'ford f350': 'ford f-350',
+    'ford f350 super duty': 'ford f-350',
+    'honda civic lx': 'honda civic',
+    'jeep grand cherokee laredo': 'jeep grand cherokee',
+    'nissan frontier crew cab sv': 'nissan frontier',
+    'toyota camry le': 'toyota camry',
+}
+
+data['model'] = data['model'].replace(replacement_dict)
 
 st.title('Choose your vehicle!')
 st.header('Use this app to select a vehicle on the market')
@@ -15,6 +48,7 @@ price_range = st.slider(
 )
 
 actual_range=list(range(price_range[0], price_range[1]+1))
+filtered_data=data[data.price.isin(actual_range)] 
 
 low_odometer = st.checkbox('Only low odometer')
 
