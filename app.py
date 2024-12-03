@@ -57,7 +57,7 @@ if low_odometer:
 else:
     filtered_data = data[data['price'].isin(actual_range)]
     
-st.write('Here are your options with a split by price and odometer')
+st.write = ('Here are your options with a split by price and odometer')
 
 fig = px.scatter(filtered_data, x='odometer', y='price', title="Vehicle Price vs. Odometer Reading")
 st.plotly_chart(fig)
