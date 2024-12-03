@@ -7,7 +7,6 @@ data=pd.read_csv('C:/Users/galia/Documents/vehicles sprint 6 project/vehicles/ve
 columns_to_replace = ['paint_color', 'is_4wd']
 for column in columns_to_replace:
     data[column]= data[column].fillna('unknown')
-    print(data[column])
     
 data['model_year'] = data['model_year'].fillna(data.groupby(['model'])
 ['model_year'].transform('median'))
