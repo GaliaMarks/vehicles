@@ -54,7 +54,7 @@ price_upper = Q3_price + 1.5 * IQR_price
 
 data = data[
     (data['model_year'] >= model_year_lower) & (data['model_year'] <= model_year_upper) &
-    (data['price'] >= price_lower) & (data['price'] <= price_upper)
+    (data['price'] >= price_lower) & (data['price'] <= price_upper)]
 
 st.title('Choose your vehicle!')
 st.header('Use this app to select a vehicle on the market')
