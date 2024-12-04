@@ -12,7 +12,7 @@ data['model_year'] = data['model_year'].fillna(data.groupby(['model'])
 ['model_year'].transform('median'))
 data['model_year'] = data['model_year'].apply( lambda x: int(x))
 
-data['cylinders'] = pd.to_numeric(data['cylinders'], errors='ignore')
+data['cylinders'] = pd.to_numeric(data['cylinders'])
 data['cylinders'] = data['cylinders'].fillna(data.groupby(['model'])
 ['cylinders'].transform('mean'))
 
@@ -35,6 +35,26 @@ replacement_dict = {
 }
 
 data['model'] = data['model'].replace(replacement_dict)
+
+# Identify IQR for model_year and price
+Q1_model_year = data['model_year'].quantile(0.25)
+Q3_model_year = data['model_year'].quantile(0.75)
+IQR_model_year = Q3_model_year - Q1_model_year
+
+Q1_price = data['price'].quantile(0.25)
+Q3_price = data['price'].quantile(0.75)
+IQR_price = Q3_price - Q1_price
+
+# Define outlier boundaries
+model_year_lower = Q1_model_year - 1.5 * IQR_model_year
+model_year_upper = Q3_model_year + 1.5 * IQR_model_year
+
+price_lower = Q1_price - 1.5 * IQR_price
+price_upper = Q3_price + 1.5 * IQR_price
+
+data = data[
+    (data['model_year'] >= model_year_lower) & (data['model_year'] <= model_year_upper) &
+    (data['price'] >= price_lower) & (data['price'] <= price_upper)
 
 st.title('Choose your vehicle!')
 st.header('Use this app to select a vehicle on the market')
